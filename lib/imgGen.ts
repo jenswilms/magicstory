@@ -14,7 +14,7 @@ export async function generateImage(keywords: string) {
     {
       input: {
         prompt: prompt,
-        image_dimensions: "512x512",
+        image_dimensions: "128x128",
         num_inference_steps: 25,
         num_outputs: 1,
         guideance_scale: 8,
