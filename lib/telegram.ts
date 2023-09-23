@@ -41,10 +41,12 @@ async function handleIncomingMessage(bot: any, message: Message) {
     const openai = await createOpenAIConnection();
     const fileId = message.voice.file_id;
     const transcription = await transcribe(openai, bot, fileId);
-    currentMessage = transcription.text;
+    console.log("whisper:" + transcription)
+    currentMessage = transcription;
+  } else {
+    currentMessage = message.text;
   }
-
-  currentMessage = message.text;
+  console.log("return:" + currentMessage)
 
   const story = await getStoryStart(supabase, user_id);
 
@@ -66,8 +68,9 @@ async function handleIncomingMessage(bot: any, message: Message) {
 
     //render image
     const { generateImage } = require("./imgGen");
-    const img = await generateImage(currentMessage);
+    const img = await generateImage(response);
     bot.sendPhoto(message.chat.id, img[0]);
+
   } else {
     console.log("continue");
     const chatHistory = await getChatHistory(supabase, user_id);
@@ -77,6 +80,11 @@ async function handleIncomingMessage(bot: any, message: Message) {
       text: currentMessage || "",
     });
     response = await continueStory(chatHistory);
+
+    //render image
+    const { generateImage } = require("./imgGen");
+    const img = await generateImage(response);
+    bot.sendPhoto(message.chat.id, img[0]);
   }
 
   bot.sendMessage(message.chat.id, response);
