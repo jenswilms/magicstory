@@ -52,7 +52,7 @@ async function handleIncomingMessage(bot: any, message: Message) {
 
   let storeUserMessage = true;
   let response;
-  // Check if user id exists in user_stories.json
+  // Check if user id exists in story
   if (story.length === 0) {
     console.log("User doesnt exist in stories");
 
