@@ -17,9 +17,10 @@ interface ChatMessage {
 import { createCompletions } from "./anthropic";
 
 export async function createStoryIntro(keywords: string) {
-  const prompt = `Write a small introduction about ${keywords}! 
+  const intro_prompt = `Write a small introduction about ${keywords}! 
   Be short and prompt the user back with a question on how to continue the story`;
-
+  const prompt = `${Anthropic.HUMAN_PROMPT} ${intro_prompt}${Anthropic.AI_PROMPT}`;
+ 
   const completion = await createCompletions(prompt);
   return completion;
 }
