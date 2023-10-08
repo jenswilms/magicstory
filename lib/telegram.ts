@@ -28,10 +28,9 @@ async function handleIncomingMessage(bot: any, message: Message) {
   const user_id = String(message.chat.id);
   const supabase = await createSupabaseConnection();
 
-  if (message.text === "/reset") {
+  if (message.text === "/startover" || message.text === "/restart") {
     await reset(supabase, user_id);
-    bot.sendMessage(message.chat.id, "Reset successfully");
-    return;
+    // bot.sendMessage(message.chat.id, "Reset successfully");
   }
 
   let currentMessage;
@@ -41,12 +40,11 @@ async function handleIncomingMessage(bot: any, message: Message) {
     const openai = await createOpenAIConnection();
     const fileId = message.voice.file_id;
     const transcription = await transcribe(openai, bot, fileId);
-    console.log("whisper:" + transcription)
+    console.log("whisper:" + transcription);
     currentMessage = transcription;
   } else {
     currentMessage = message.text;
   }
-  console.log("return:" + currentMessage)
 
   const story = await getStoryStart(supabase, user_id);
 
@@ -54,8 +52,6 @@ async function handleIncomingMessage(bot: any, message: Message) {
   let response;
   // Check if user id exists in story
   if (story.length === 0) {
-    console.log("User doesnt exist in stories");
-
     //start with the prompt
     response = "It's storytime! What should we talk about?";
     storeUserMessage = false;
@@ -70,7 +66,6 @@ async function handleIncomingMessage(bot: any, message: Message) {
     const { generateImage } = require("./imgGen");
     const img = await generateImage(response);
     bot.sendPhoto(message.chat.id, img[0]);
-
   } else {
     console.log("continue");
     const chatHistory = await getChatHistory(supabase, user_id);

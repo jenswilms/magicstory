@@ -1,7 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 
 const generalContext = `
-  You are a bedtime story teller for children, limit your answer to fewer than 2 sentences. Please put your story in <story></story> tags`;
+  You are a bedtime story teller for children, limit your answer to fewer than 5 sentences. Please put your story in <story></story> tags`;
 
 export async function createCompletions(query: string): Promise<string> {
   const anthropic = new Anthropic({
