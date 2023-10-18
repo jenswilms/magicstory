@@ -14,12 +14,12 @@ export async function generateImage(keywords: string) {
     {
       input: {
         prompt: prompt,
-        image_dimensions: "128x128",
+        image_dimensions: "64x64",
         num_inference_steps: 25,
         num_outputs: 1,
-        guideance_scale: 8,
-        refine: "expert_ensemble_refiner",
-        scheduler: "K_EULER",
+        guideance_scale: 7.5,
+        // refine: "expert_ensemble_refiner",
+        // scheduler: "K_EULER",
       },
     }
   );
