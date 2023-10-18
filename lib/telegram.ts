@@ -55,34 +55,78 @@ async function handleIncomingMessage(bot: any, message: Message) {
     //start with the prompt
     response = "It's storytime! What should we talk about?";
     storeUserMessage = false;
+    bot.sendMessage(message.chat.id, response);
     await createStoryStart(supabase, user_id);
-  } else if (story.length > 0 && story[0].firstmessagesent === false) {
-    console.log("Send story intro");
-    //get the intro and send to user
-    response = await createStoryIntro(currentMessage || "");
-    await updateStoryStart(supabase, user_id);
-
-    //render image
-    const { generateImage } = require("./imgGen");
-    const img = await generateImage(response);
-    bot.sendPhoto(message.chat.id, img[0]);
   } else {
-    console.log("continue");
-    const chatHistory = await getChatHistory(supabase, user_id);
-    chatHistory.push({
-      user_id: user_id,
-      sender: "bot",
-      text: currentMessage || "",
-    });
-    response = await continueStory(chatHistory);
+      if (story[0].firstmessagesent === false)  {
+        console.log("Send story intro");
+        //get the intro and send to user
+        response = await createStoryIntro(currentMessage || "");
+        await updateStoryStart(supabase, user_id);
+      } else {
+        console.log("continue");
+        const chatHistory = await getChatHistory(supabase, user_id);
+        chatHistory.push({
+          user_id: user_id,
+          sender: "bot",
+          text: currentMessage || "",
+        });
+        response = await continueStory(chatHistory);
+      };
+        // parse results
+      const enRegex = /<en>(.*?)<\/en>/s;
+      const storyRegex = /<story>(.*?)<\/story>/s;
+      const questionRegex = /<question>(.*?)<\/question>/s;
+      
+      const storyMatch = response.match(storyRegex);
+      const questionMatch = response.match(questionRegex);
+      const enMatch = response.match(enRegex);
 
-    //render image
-    const { generateImage } = require("./imgGen");
-    const img = await generateImage(response);
-    bot.sendPhoto(message.chat.id, img[0]);
-  }
+      let responseText = "";
+      if (storyMatch) {
+        responseText += storyMatch[1];
+      }
+      responseText += "\n";
+      if (questionMatch) {
+        responseText += questionMatch[1];
+      };
 
-  bot.sendMessage(message.chat.id, response);
+      bot.sendMessage(message.chat.id, responseText);
+
+      //render image
+      const { generateImage } = require("./imgGen");
+      const imgText = enMatch ? enMatch[1] : (storyMatch ? storyMatch[1] : "");
+      console.log( 'imgText:'+ imgText);
+      const img = await generateImage(imgText);
+      bot.sendPhoto(message.chat.id, img[0]); 
+
+      // Create a Telegram button for user to request image
+      // let imgText: string = "";
+      // imgText = enMatch ? enMatch[1] : (storyMatch ? storyMatch[1] : "");
+      // const opts = {
+      //   reply_markup: {
+      //     inline_keyboard: [
+      //       [
+      //         {
+      //           text: 'Generate Image',
+      //           callback_data: 'generate_image'
+      //         }
+      //       ]
+      //     ]
+      //   }
+      // };
+      // bot.sendMessage(message.chat.id, 'Show me 🎨', opts)
+
+      // // Listen for button click event
+      // bot.on('callback_query', async (callbackQuery: any) => {
+      //   const { generateImage } = require("./imgGen");
+      //   console.log( 'imgText:'+ imgText);
+      //   const img = await generateImage(imgText);
+      //   bot.sendPhoto(callbackQuery.message.chat.id, img[0]);
+      // });
+  };
+
+  
 
   //store messages in DB
   if (storeUserMessage)
