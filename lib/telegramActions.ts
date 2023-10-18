@@ -41,7 +41,8 @@ export async function continueStory(userChatHistory: ChatMessage[]) {
     chatString = chatString.trim();
   }
 
-  chatString += `\nBe short and prompt the user back with a question on how to continue the story`;
+  chatString += `\nExpand the story by 3 sentences and prompt the user back with a question on how to continue the story. 
+  Please put your question in <question></question> tags`;
 
   const completion = await createCompletions(chatString);
   return completion;
