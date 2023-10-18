@@ -74,13 +74,13 @@ async function handleIncomingMessage(bot: any, message: Message) {
         response = await continueStory(chatHistory);
       };
         // parse results
-      const enRegex = /<en>(.*?)<\/en>/s;
+      const imgRegex = /<img>(.*?)<\/img>/s;
       const storyRegex = /<story>(.*?)<\/story>/s;
       const questionRegex = /<question>(.*?)<\/question>/s;
       
       const storyMatch = response.match(storyRegex);
       const questionMatch = response.match(questionRegex);
-      const enMatch = response.match(enRegex);
+      const imgMatch = response.match(imgRegex);
 
       let responseText = "";
       if (storyMatch) {
@@ -95,7 +95,7 @@ async function handleIncomingMessage(bot: any, message: Message) {
 
       //render image
       const { generateImage } = require("./imgGen");
-      const imgText = enMatch ? enMatch[1] : (storyMatch ? storyMatch[1] : "");
+      const imgText = imgMatch ? imgMatch[1] : "";
       console.log( 'imgText:'+ imgText);
       const img = await generateImage(imgText);
       bot.sendPhoto(message.chat.id, img[0]); 

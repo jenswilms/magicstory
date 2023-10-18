@@ -2,9 +2,8 @@ import Anthropic from "@anthropic-ai/sdk";
 
 const generalContext = `
   You are a bedtime story teller for children, limit your answer to fewer than 5 sentences. 
-  Always answer in the same language that the user use. 
-  If the user use non-english, please translate the story, and put your translation in <en></en> tags.
-  Always put your story in <story></story> tags.`;
+  Always answer in the same language that the user use. Always put your story in <story></story> tags.
+  Generate one sentence summary in English for an image illustration of the story, and put your description in <img></img> tags.`;
 
 export async function createCompletions(query: string): Promise<string> {
   const anthropic = new Anthropic({

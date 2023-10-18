@@ -18,8 +18,8 @@ export async function generateImage(keywords: string) {
         num_inference_steps: 25,
         num_outputs: 1,
         guideance_scale: 7.5,
-        // refine: "expert_ensemble_refiner",
-        // scheduler: "K_EULER",
+        refine: "expert_ensemble_refiner",
+        scheduler: "K_EULER",
       },
     }
   );
