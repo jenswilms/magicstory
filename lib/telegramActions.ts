@@ -18,7 +18,8 @@ import { createCompletions } from "./anthropic";
 
 export async function createStoryIntro(keywords: string) {
   const intro_prompt = `Write a small introduction about ${keywords}! 
-  Be short and prompt the user back with a question on how to continue the story`;
+  Be short and prompt the user back with a question on how to continue the story. 
+  Then, generate one sentence summary in English for an image illustration of the story, and put your description in <img></img> tags.`;
   const prompt = `${Anthropic.HUMAN_PROMPT} ${intro_prompt}${Anthropic.AI_PROMPT}`;
  
   const completion = await createCompletions(prompt);
@@ -42,7 +43,8 @@ export async function continueStory(userChatHistory: ChatMessage[]) {
   }
 
   chatString += `\nExpand the story by 3 sentences and prompt the user back with a question on how to continue the story. 
-  Please put your question in <question></question> tags`;
+  Please put your question in <question></question> tags.
+  Then, generate one sentence summary in English for an image illustration of the continuation, and put your description in <img></img> tags.`;
 
   const completion = await createCompletions(chatString);
   return completion;

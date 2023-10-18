@@ -74,13 +74,16 @@ async function handleIncomingMessage(bot: any, message: Message) {
         response = await continueStory(chatHistory);
       };
         // parse results
-      const imgRegex = /<img>(.*?)<\/img>/s;
+      
       const storyRegex = /<story>(.*?)<\/story>/s;
       const questionRegex = /<question>(.*?)<\/question>/s;
+      const imgRegex = /<img>(.*?)<\/img>/s;
       
       const storyMatch = response.match(storyRegex);
       const questionMatch = response.match(questionRegex);
       const imgMatch = response.match(imgRegex);
+
+      console.log(response);
 
       let responseText = "";
       if (storyMatch) {
