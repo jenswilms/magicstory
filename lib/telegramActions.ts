@@ -28,7 +28,7 @@ export async function createStoryIntro(keywords: string) {
 
 export async function continueStory(userChatHistory: ChatMessage[]) {
   // console.log(userChatHistory);
-  let chatString = `Please continue the following story:\n`;
+  let chatString = `Please continue the story:\n`;
 
   if (userChatHistory.length > 0) {
     for (let i = 0; i < userChatHistory.length; i++) {
@@ -42,7 +42,8 @@ export async function continueStory(userChatHistory: ChatMessage[]) {
     chatString = chatString.trim();
   }
 
-  chatString += `\nExpand the story by 3 sentences and prompt the user back with a question on how to continue the story. 
+  chatString += `\n First, return the next 3 sentences that continue the story. Don't return the whole story, just the next 3 sentences.
+  Then, prompt the user back with a question on how to continue the story. 
   Please put your question in <question></question> tags.
   Then, generate one sentence summary in English for an image illustration of the continuation, and put your description in <img></img> tags.`;
 
